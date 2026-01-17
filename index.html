@@ -2,105 +2,110 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PromptAS Earn</title>
 
+  <!-- Telegram WebApp -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(180deg, #4f6cff, #6a5cff);
-      color: white;
-      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, #5b4bff, #7b5cff);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
     }
 
-    .container {
+    .app {
       width: 100%;
-      max-width: 360px;
-      padding: 20px;
+      max-width: 420px;
+      padding: 32px 20px;
       text-align: center;
     }
 
     h1 {
+      font-size: 28px;
       margin-bottom: 8px;
     }
 
     .subtitle {
       opacity: 0.9;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
     }
 
-    button {
+    .btn {
       width: 100%;
-      padding: 14px;
-      margin-bottom: 14px;
-      font-size: 16px;
-      border-radius: 12px;
+      padding: 16px;
+      font-size: 18px;
+      border-radius: 14px;
       border: none;
       cursor: pointer;
+      margin-bottom: 14px;
     }
 
-    .primary {
-      background: white;
-      color: #4f6cff;
-      font-weight: bold;
+    .btn-primary {
+      background: #ffd86b;
+      color: #3a2e00;
+      font-weight: 600;
     }
 
-    .secondary {
+    .btn-secondary {
       background: rgba(255,255,255,0.15);
-      color: white;
+      color: #fff;
       border: 1px solid rgba(255,255,255,0.3);
     }
 
-    .footer {
-      margin-top: 32px;
-      font-size: 12px;
+    .id {
+      margin-top: 28px;
+      font-size: 14px;
       opacity: 0.8;
     }
   </style>
 </head>
-<body>
 
-  <div class="container">
+<body>
+  <div class="app">
     <h1>🚀 PromptAS Earn</h1>
     <div class="subtitle">Uždirbk kviesdamas žmones</div>
 
-    <button class="primary" onclick="openEarn()">💸 Uždirbti</button>
-    <button class="secondary" onclick="openInvite()">🤝 Pakviesti</button>
+    <button class="btn btn-primary" onclick="earn()">
+      💰 Uždirbti
+    </button>
 
-    <div class="footer" id="userId">Kraunama...</div>
+    <button class="btn btn-secondary" onclick="invite()">
+      🤝 Pakviesti
+    </button>
+
+    <div class="id" id="userId">Tavo Telegram ID: ...</div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
 
-    // Telegram ID atvaizdavimas
-    setTimeout(() => {
-      const data = tg.initDataUnsafe;
-      if (data && data.user && data.user.id) {
-        document.getElementById("userId").innerText =
-          "Tavo Telegram ID: " + data.user.id;
-      } else {
-        document.getElementById("userId").innerText =
-          "Telegram ID nerastas";
-      }
-    }, 300);
+    // Gauti Telegram ID
+    const user = tg.initDataUnsafe?.user;
 
-    // Laikinos funkcijos (niekur neveda)
-    function openEarn() {
-      tg.showAlert("Earn ekranas bus pridėtas kitame žingsnyje");
+    if (user && user.id) {
+      document.getElementById("userId").innerText =
+        "Tavo Telegram ID: " + user.id;
     }
 
-    function openInvite() {
-      tg.showAlert("Pakvietimų ekranas bus pridėtas kitame žingsnyje");
+    function earn() {
+      tg.showAlert("💰 Earn dar kuriamas 🙂");
+    }
+
+    function invite() {
+      const botUsername = "Promptas_earn_bot"; // <- PASITIKRINK
+      const link = `https://t.me/${botUsername}?start=${user?.id || "ref"}`;
+
+      navigator.clipboard.writeText(link);
+      tg.showAlert("✅ Kvietimo nuoroda nukopijuota");
     }
   </script>
-
 </body>
 </html>
