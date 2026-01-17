@@ -39,17 +39,26 @@
 
   <div class="box">
     <h1>🚀 PromptAS Earn</h1>
-    <p>Mini App veikia</p>
+    <p id="user">Kraunama...</p>
     <button id="btn">OK</button>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
-    tg.ready();
+tg.ready();
 
-    document.getElementById("btn").onclick = () => {
-      tg.showAlert("Viskas veikia 👌");
-    };
+const userEl = document.getElementById("user");
+
+if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  const user = tg.initDataUnsafe.user;
+  userEl.innerText = `Tavo Telegram ID: ${user.id}`;
+} else {
+  userEl.innerText = "Nepavyko gauti Telegram ID";
+}
+
+document.getElementById("btn").onclick = () => {
+  tg.showAlert("ID nuskaitytas 👍");
+};
   </script>
 
 </body>
