@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptAS Earn</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 40px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 15px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #6366f1;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚀 PromptAS Earn</h1>
+<p id="user">Kraunama...</p>
+
+<button onclick="copyLink()">📤 Kopijuoti pakvietimo nuorodą</button>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
+  const userId = tg.initDataUnsafe?.user?.id || "guest";
+  document.getElementById("user").innerText =
+    "Tavo ID: " + userId;
+
+  function copyLink() {
+    const link = `https://t.me/Promptas_earn_bot?start=${userId}`;
+    navigator.clipboard.writeText(link);
+    alert("Pakvietimo nuoroda nukopijuota!");
+  }
+</script>
+
+</body>
+</html>
