@@ -2,22 +2,16 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PromptAS Earn</title>
-  
-  <p id="userId">Kraunama...</p>
-  
-  <p id="refLink"></p>
-<button onclick="copyRef()">Kopijuoti kvietimo nuorodą</button>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Telegram Mini App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(180deg, #1e3c72, #2a5298);
+      background: linear-gradient(180deg, #4f6cff, #6a5cff);
       color: white;
       display: flex;
       justify-content: center;
@@ -25,62 +19,66 @@
       height: 100vh;
     }
 
-    .box {
+    .container {
+      width: 100%;
+      max-width: 360px;
       text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    p {
+      opacity: 0.9;
+      margin-bottom: 24px;
     }
 
     button {
-      margin-top: 16px;
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: none;
-      background: #6c8cff;
-      color: white;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
       font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .earn {
+      background: white;
+      color: #4f6cff;
+      font-weight: bold;
+    }
+
+    .invite {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
     }
   </style>
 </head>
 <body>
 
-  <div class="box">
+  <div class="container">
     <h1>🚀 PromptAS Earn</h1>
-    <p id="user">Kraunama...</p>
-    <button id="btn">OK</button>
+    <p>Uždirbk dalyvaudamas ir kviesdamas draugus</p>
+
+    <button class="earn" onclick="openEarn()">💰 Earn</button>
+    <button class="invite" onclick="openInvite()">👥 Pakviesti draugą</button>
   </div>
 
   <script>
-function generateRefLink(userId) {
-  const link = `https://t.me/Promptas_earn_bot/Earn?startapp=${userId}`;
-  document.getElementById("refLink").innerText =
-    "Tavo kvietimo nuoroda:\n" + link;
-}
-
-function copyRef() {
-  const text = document
-    .getElementById("refLink")
-    .innerText.replace("Tavo kvietimo nuoroda:\n", "");
-  navigator.clipboard.writeText(text);
-  alert("Kvietimo nuoroda nukopijuota");
-}
     const tg = window.Telegram.WebApp;
-tg.showAlert("Telegram WebApp aktyvus");
+    tg.ready();
 
-const userEl = document.getElementById("user");
+    function openEarn() {
+      tg.showAlert("Earn funkcija netrukus 🚧");
+    }
 
-setTimeout(() => {
-  const data = Telegram.WebApp.initDataUnsafe;
-
-  if (data && data.user && data.user.id) {
-    userEl.innerText = "Tavo Telegram ID: " + data.user.id;
-    generateRefLink(user.id);
-  } else {
-    userEl.innerText = "Telegram ID nerastas";
-  }
-}, 300);
-
-document.getElementById("btn").onclick = () => {
-  tg.showAlert("ID nuskaitytas 👍");
-};
+    function openInvite() {
+      tg.showAlert("Pakvietimai bus pridėti vėliau 👋");
+    }
   </script>
 
 </body>
