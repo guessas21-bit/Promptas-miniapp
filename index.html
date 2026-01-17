@@ -49,12 +49,15 @@ tg.showAlert("Telegram WebApp aktyvus");
 
 const userEl = document.getElementById("user");
 
-if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-  const user = tg.initDataUnsafe.user;
-  userEl.innerText = `Tavo Telegram ID: ${user.id}`;
-} else {
-  userEl.innerText = "Nepavyko gauti Telegram ID";
-}
+setTimeout(() => {
+  const data = Telegram.WebApp.initDataUnsafe;
+
+  if (data && data.user && data.user.id) {
+    userEl.innerText = "Tavo Telegram ID: " + data.user.id;
+  } else {
+    userEl.innerText = "Telegram ID nerastas";
+  }
+}, 300);
 
 document.getElementById("btn").onclick = () => {
   tg.showAlert("ID nuskaitytas 👍");
