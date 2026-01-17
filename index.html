@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="lt">
 <head>
-  <meta charset="UTF-8" />
-  <title>PromptAS Earn – Invite</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>PromptAS Earn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Telegram WebApp -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -20,19 +20,52 @@
       align-items: center;
     }
 
-    .card {
+    .screen {
       width: 90%;
       max-width: 420px;
+      display: none;
       text-align: center;
     }
 
+    .screen.active {
+      display: block;
+    }
+
     h1 {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     p {
       opacity: 0.85;
       margin-bottom: 24px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .primary {
+      background: #facc15;
+      color: #1e1b4b;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .id {
+      margin-top: 24px;
+      font-size: 14px;
+      opacity: 0.8;
     }
 
     .link-box {
@@ -44,29 +77,6 @@
       font-size: 14px;
     }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: none;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .copy-btn {
-      background: #facc15;
-      color: #1e1b4b;
-    }
-
-    .back-btn {
-      margin-top: 12px;
-      background: transparent;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-
-    /* Toast */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -88,16 +98,30 @@
 </head>
 
 <body>
-  <div class="card">
+
+  <!-- HOME -->
+  <div class="screen active" id="home">
+    <h1>🚀 PromptAS Earn</h1>
+    <p>Uždirbk kviesdamas žmones</p>
+
+    <button class="primary" onclick="earn()">💰 Uždirbti</button>
+    <button class="secondary" onclick="openInvite()">🤝 Pakviesti</button>
+
+    <div class="id" id="userIdText"></div>
+  </div>
+
+  <!-- INVITE -->
+  <div class="screen" id="invite">
     <h1>🤝 Pakviesk draugus</h1>
-    <p>Pasidalink kvietimo nuoroda ir uždirbk</p>
+    <p>Pasidalink kvietimo nuoroda</p>
 
     <div class="link-box" id="inviteLink"></div>
 
-    <button class="copy-btn" onclick="copyLink()">📋 Kopijuoti kvietimo nuorodą</button>
-    <button class="back-btn" onclick="goBack()">⬅️ Grįžti</button>
+    <button class="primary" onclick="copyLink()">📋 Kopijuoti kvietimo nuorodą</button>
+    <button class="secondary" onclick="goHome()">⬅️ Atgal</button>
   </div>
 
+  <!-- TOAST -->
   <div class="toast" id="toast">✅ Kvietimo nuoroda nukopijuota</div>
 
   <script>
@@ -105,9 +129,25 @@
     tg.ready();
 
     const userId = tg.initDataUnsafe?.user?.id || "UNKNOWN";
-
     const inviteUrl = `https://t.me/Promptas_earn_bot?start=${userId}`;
+
+    document.getElementById("userIdText").innerText =
+      "Tavo Telegram ID: " + userId;
+
     document.getElementById("inviteLink").innerText = inviteUrl;
+
+    function openInvite() {
+      showScreen("invite");
+    }
+
+    function goHome() {
+      showScreen("home");
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
 
     function copyLink() {
       navigator.clipboard.writeText(inviteUrl).then(() => {
@@ -118,14 +158,13 @@
     function showToast() {
       const toast = document.getElementById("toast");
       toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 1500);
+      setTimeout(() => toast.classList.remove("show"), 1500);
     }
 
-    function goBack() {
-      tg.close();
+    function earn() {
+      tg.showAlert("💰 Uždirbimo skiltis dar kuriama 🙂");
     }
   </script>
+
 </body>
 </html>
