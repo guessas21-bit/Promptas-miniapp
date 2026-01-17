@@ -1,90 +1,85 @@
 <!DOCTYPE html>
 <html lang="lt">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PromptAS Earn</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Telegram WebApp -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(180deg, #6d28d9, #4c1d95);
-      color: white;
       min-height: 100vh;
+      background: linear-gradient(180deg, #6d3cff, #4b1fb8);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .screen {
-      width: 90%;
+    .app {
+      width: 100%;
       max-width: 420px;
-      display: none;
+      padding: 32px 20px 28px;
       text-align: center;
     }
 
-    .screen.active {
-      display: block;
-    }
-
     h1 {
-      margin-bottom: 6px;
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 700;
     }
 
-    p {
+    .subtitle {
       opacity: 0.85;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
+      font-size: 15px;
     }
 
-    button {
+    .btn {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border-radius: 14px;
-      border: none;
       font-size: 16px;
       font-weight: 600;
+      border: none;
       cursor: pointer;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
-    .primary {
-      background: #facc15;
-      color: #1e1b4b;
+    .btn-primary {
+      background: #f5c542;
+      color: #2b2100;
     }
 
-    .secondary {
+    .btn-secondary {
       background: rgba(255,255,255,0.15);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
     }
 
-    .id {
-      margin-top: 24px;
-      font-size: 14px;
-      opacity: 0.8;
+    .telegram-id {
+      margin-top: 26px;
+      font-size: 13px;
+      opacity: 0.75;
     }
 
-    .link-box {
-      background: rgba(255,255,255,0.15);
-      padding: 12px;
-      border-radius: 12px;
-      word-break: break-all;
-      margin-bottom: 16px;
-      font-size: 14px;
-    }
-
+    /* Toast */
     .toast {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.75);
+      color: #fff;
       padding: 12px 18px;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 14px;
       opacity: 0;
       pointer-events: none;
@@ -96,74 +91,59 @@
     }
   </style>
 </head>
-
 <body>
 
-  <!-- HOME -->
-  <div class="screen active" id="home">
+  <div class="app">
     <h1>🚀 PromptAS Earn</h1>
-    <p>Uždirbk kviesdamas žmones</p>
+    <div class="subtitle">Uždirbk kviesdamas žmones</div>
 
-    <button class="primary" onclick="earn()">💰 Uždirbti</button>
-    <button class="secondary" onclick="openInvite()">🤝 Pakviesti</button>
+    <button class="btn btn-primary" id="earnBtn">💰 Uždirbti</button>
+    <button class="btn btn-secondary" id="inviteBtn">🤝 Pakviesti</button>
 
-    <div class="id" id="userIdText"></div>
+    <div id="telegram-id" class="telegram-id">
+      Tavo Telegram ID: ...
+    </div>
   </div>
 
-  <!-- INVITE -->
-  <div class="screen" id="invite">
-    <h1>🤝 Pakviesk draugus</h1>
-    <p>Pasidalink kvietimo nuoroda</p>
-
-    <div class="link-box" id="inviteLink"></div>
-
-    <button class="primary" onclick="copyLink()">📋 Kopijuoti kvietimo nuorodą</button>
-    <button class="secondary" onclick="goHome()">⬅️ Atgal</button>
-  </div>
-
-  <!-- TOAST -->
-  <div class="toast" id="toast">✅ Kvietimo nuoroda nukopijuota</div>
+  <div id="toast" class="toast"></div>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
+    const tg = window.Telegram?.WebApp;
 
-    const userId = tg.initDataUnsafe?.user?.id || "UNKNOWN";
-    const inviteUrl = `https://t.me/Promptas_earn_bot?start=${userId}`;
-
-    document.getElementById("userIdText").innerText =
-      "Tavo Telegram ID: " + userId;
-
-    document.getElementById("inviteLink").innerText = inviteUrl;
-
-    function openInvite() {
-      showScreen("invite");
+    // --- START LOGIKA ---
+    if (tg) {
+      tg.ready();
     }
 
-    function goHome() {
-      showScreen("home");
+    // --- TELEGRAM ID ---
+    const idEl = document.getElementById('telegram-id');
+    let userId = null;
+
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+      userId = tg.initDataUnsafe.user.id;
+      idEl.textContent = 'Tavo Telegram ID: ' + userId;
+    } else {
+      idEl.textContent = 'Tavo Telegram ID: neaptiktas';
     }
 
-    function showScreen(id) {
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
+    // --- TOAST ---
+    const toast = document.getElementById('toast');
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    function copyLink() {
-      navigator.clipboard.writeText(inviteUrl).then(() => {
-        showToast();
-      });
-    }
+    // --- MYGTUKAI ---
+    document.getElementById('earnBtn').onclick = () => {
+      showToast('💰 Earn dar kuriamas');
+    };
 
-    function showToast() {
-      const toast = document.getElementById("toast");
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1500);
-    }
-
-    function earn() {
-      tg.showAlert("💰 Uždirbimo skiltis dar kuriama 🙂");
-    }
+    document.getElementById('inviteBtn').onclick = () => {
+      const link = `https://t.me/promptas_earn_bot?start=${userId || 'guest'}`;
+      navigator.clipboard.writeText(link);
+      showToast('✅ Kvietimo nuoroda nukopijuota');
+    };
   </script>
 
 </body>
