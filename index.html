@@ -35,19 +35,24 @@
 <button onclick="copyLink()">📤 Kopijuoti pakvietimo nuorodą</button>
 
 <script>
-  const tg = window.Telegram.WebApp;
-  tg.ready();
+  const tg = window.Telegram?.WebApp;
 
-  const userId = tg.initDataUnsafe?.user?.id || "guest";
-  document.getElementById("user").innerText =
-    "Tavo ID: " + userId;
+  let userId = "guest";
+
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    userId = tg.initDataUnsafe.user.id;
+  }
+
+  document.getElementById("user").innerText = userId;
 
   function copyLink() {
-    const link = `https://t.me/Promptas_earn_bot?start=${userId}`;
-    navigator.clipboard.writeText(link);
-    alert("Pakvietimo nuoroda nukopijuota!");
+    const baseUrl = "https://guessas21-bit.github.io/Promptas-miniapp/";
+    const referralLink = `${baseUrl}?ref=${userId}`;
+
+    navigator.clipboard.writeText(referralLink).then(() => {
+      alert("Pakvietimo nuoroda nukopijuota!");
+    });
   }
 </script>
-
 </body>
 </html>
